@@ -1,6 +1,8 @@
 # DB Explorer
 
-A commandline tool for exploring a database from the commandline. 
+A command-line tool for exploring a database from the command-line.
+
+**This project is not ready, but its public because I need it 😉**
 
 ## Getting Started
 ### Install
