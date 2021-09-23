@@ -1,8 +1,14 @@
 # DB Explorer
 
-A command-line tool for exploring a database from the command-line.
+A bootstrapped command-line tool for exploring and working with a database from the command-line. 
+Useful when interacting with a DB on a project without CLI tooling offered by its framework.
 
-**This project is not ready, but its public because I need it 😉**
+## Features
+- **[SQLAlchemy:](https://www.sqlalchemy.org/)** Powered by providing a SQLAlchemy engine.
+- **[Typer:](https://typer.tiangolo.com/)** Powered by the Typer library allowing for simple command definition.
+  - **[Click:](https://click.palletsprojects.com/en/8.0.x/)** Typer is powered by the Click library which can be leveraged for additional CLI functionality.
+
+_This project is not ready, but its public because I need it 😉_
 
 ## Getting Started
 ### Install
@@ -15,39 +21,13 @@ There are multiple options for settings
 2. Create a `.env` file (recommended). 
 3. Create environment variables.
 
+## Custom Commands
+To define your own commands, create a file in the `commands/` dir. Each file must have `app = typer.Typer()` 
+which will be picked up as a sub command. 
+- Sub-command name: Taken from file name.
+- Sub-command help text: Taken from the file's doc string.
+- Sub-command available commands: Commands registered to the `app`.
+
 ## Use
-### SELECT command 
-```
-Usage: main.py select [OPTIONS] TABLE
-
-Arguments:
-  TABLE  [required]
-
-Options:
-  --columns TEXT
-  --comma-columns TEXT
-  --where TEXT
-  --help                Show this message and exit.
-```
-#### Use Case
-```bash
-$ python main.py select some_table --columns "some_col" --columns "additional_col" --comma-columns "these,also,work" --where "some_col = 'value'"
-```
-### OPERATION command 
-```
-Usage: main.py operation [OPTIONS] NAME VAR
-
-Arguments:
-  NAME  [required]
-  VAR   [required]
-
-Options:
-  --help  Show this message and exit.
-```
-#### Instructions
-- Create a function inside of the`operations.py` file that accepts a single variable (VAR).
-- This function may optionally return a string that will be printed. 
-#### Use Case
-```bash
-$ python main.py operation table_with_column id
-```
+- Your best bet is (after installing) to run `python main.py`
+- See `commands/example.py` for an example of a custom command.

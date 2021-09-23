@@ -7,7 +7,7 @@ import pandas as pd
 from utils.formatting import format_table
 from utils.db_explore import get_engine
 
-app = typer.Typer()
+app = typer.Typer(hidden=True)
 
 
 @app.command()
