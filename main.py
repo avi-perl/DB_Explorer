@@ -22,7 +22,7 @@ for item in glob.glob(f'{conf.user_defined_commands_dir_name}/*'):
         try:
             module = importlib.import_module(full_module_name)
             if isinstance(module.app, typer.main.Typer):
-                app.add_typer(module.app, name=module_name)
+                app.add_typer(module.app, name=module_name, help=module.__doc__)
         except AttributeError:
             # An attribute error will occur when a .py file does not have an app object.
             pass
@@ -47,6 +47,25 @@ def select(
     output = db_explore.get_output()
 
     typer.echo(output)
+
+
+@app.command()
+def table_with_column(column_name: str):
+    """
+    Returns a list of tables that have a column with the name passed as the column_name.
+    """
+    sql = f"""SELECT
+              `COLUMN_NAME`,
+              `TABLE_SCHEMA` as 'DATABASE',
+              `TABLE_NAME`
+            FROM
+              `INFORMATION_SCHEMA`.`COLUMNS`
+            WHERE
+              `COLUMN_NAME` LIKE '{column_name}'"""
+
+    df = pd.read_sql(sql, con=get_engine())
+
+    return format_table(df)
 
 
 @app.command()
