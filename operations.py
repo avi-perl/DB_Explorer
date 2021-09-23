@@ -4,8 +4,6 @@ from colorama import init
 from utils.sql_connection import get_engine
 from utils.formatting import format_table
 
-init()
-
 
 def table_with_column(column_name: str):
     """

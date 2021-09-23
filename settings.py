@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     tabulate_headers: str = "keys"
     tabulate_tablefmt: str = "github"
 
+    user_defined_commands_dir_name: str = "commands"
+
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'
