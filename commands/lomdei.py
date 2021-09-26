@@ -1,17 +1,28 @@
 """Module docstring is used as command help text"""
+from pathlib import Path
+from typing import Optional
 
 import typer
 import requests
 import pandas as pd
 
-from utils.formatting import format_table
-from utils.db_tools import get_engine
+from utils.formatting import format_table, TableFormatOptions
+from utils.db_tools import get_engine, QueryDataOperation
+from utils.db_tools import TyperParams as tp
 
 app = typer.Typer()
 
 
 @app.command()
-def locate_existing_user(username: str, split_char: str = "\\n"):
+def locate_existing_user(
+        username: str,
+        split_char: str = "\\n",
+        show_query: bool = tp.show_query,
+        minified_query_format: bool = tp.minified_query_format,
+        print_pages: bool = tp.print_pages,
+        output_file_path: Optional[str] = tp.output,
+        formatting: TableFormatOptions = tp.data_format,
+):
     """"""
     split_char = "\n" if split_char == "\\n" else split_char
     usernames = username.split(split_char)
@@ -30,7 +41,13 @@ def locate_existing_user(username: str, split_char: str = "\\n"):
                   left join lyceum_class c on u.id = c.teacher_id
                 where
                   u.username in ({','.join(prepared_usernames)})"""
-    print(format_table(pd.read_sql(query, con=get_engine())))
+
+    op = QueryDataOperation(query)
+    op.do_show_query(show_query, minified_query_format, die=True)
+    op.do_save_output(Path(output_file_path) if output_file_path else None, die=True)
+    op.do_print_pages(print_pages)
+
+    typer.echo(op.data_formatted(formatting))
 
 
 @app.command()
