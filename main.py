@@ -6,9 +6,9 @@ import pandas as pd
 
 import typer
 from utils.formatting import format_table
-from utils.db_explore import get_engine
+from utils.db_tools import get_engine
 
-from utils.db_explore import DBSelect, DBOperation
+from utils.db_tools import DBSelect
 from settings import settings as conf
 
 app = typer.Typer()
