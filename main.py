@@ -73,7 +73,7 @@ def table_size(database: str = typer.Option("", help="Name of the database you w
     """Returns the number of rows in each table, how much memory its using, and more"""
     query = """SELECT
                   CONCAT(table_schema, '.', table_name) table_name,
-                  CONCAT(ROUND(table_rows / 1000000, 2), 'M') rows,
+                  CONCAT(ROUND(table_rows / 1000000, 2), 'M') table_rows,
                   CONCAT(ROUND(data_length / (1024 * 1024 * 1024), 2), 'G') DATA,
                   CONCAT(ROUND(index_length / (1024 * 1024 * 1024), 2), 'G') idx,
                   CONCAT(

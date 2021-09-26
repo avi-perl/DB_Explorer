@@ -37,7 +37,8 @@ class DBOperation:
     __operation_output = None
 
     def __init__(self, operation: str, var: Any):
-        if op_function := import_from("operations", operation):
+        op_function = import_from("operations", operation)
+        if op_function:
             self.operation_function = op_function
         else:
             exit()
