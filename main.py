@@ -1,12 +1,13 @@
 import glob
 import importlib
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 import pandas as pd
 
 import typer
-from utils.formatting import format_table
-from utils.db_tools import get_engine
+from utils.formatting import format_table, TableFormatOptions
+from utils.db_tools import get_engine, QueryDataOperation
+from utils.db_tools import TyperParams as tp
 
 from utils.db_tools import DBSelect
 from settings import settings as conf
@@ -47,6 +48,28 @@ def select(
     output = db_explore.get_output()
 
     typer.echo(output)
+
+
+@app.command()
+def run_sql(
+    sql: str = typer.Option(..., "--sql", "-s", help="A SQL string to run, or a path to a file with a sql string"),
+    show_query: bool = tp.show_query,
+    minified_query_format: bool = tp.minified_query_format,
+    print_pages: bool = tp.print_pages,
+    output_file_path: Optional[str] = tp.output,
+    formatting: TableFormatOptions = tp.data_format,
+):
+    """General purpose command that accepts user provided sql as input"""
+    if Path(sql).is_file():
+        with open(sql, "r") as read:
+            sql = read.read()
+
+    op = QueryDataOperation(sql)
+    op.do_show_query(show_query, minified_query_format, die=True)
+    op.do_save_output(Path(output_file_path) if output_file_path else None, die=True)
+    op.do_print_pages(print_pages)
+
+    typer.echo(op.data_formatted(formatting))
 
 
 @app.command()
