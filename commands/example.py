@@ -20,7 +20,7 @@ def current_time():
 
 
 @app.command()
-def tables(
+def op_example(
     show_query: bool = tp.show_query,
     minified_query_format: bool = tp.minified_query_format,
     print_pages: bool = tp.print_pages,
