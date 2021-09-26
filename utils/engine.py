@@ -14,7 +14,7 @@ def get_engine() -> Engine:
     return create_engine(f"{type}://{user}:{password}@{host}/{default_db}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     engine = get_engine()
     with engine.connect() as connection:
         result = connection.execute("SELECT NOW()")

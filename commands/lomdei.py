@@ -5,13 +5,13 @@ import requests
 import pandas as pd
 
 from utils.formatting import format_table
-from utils.db_explore import get_engine
+from utils.db_tools import get_engine
 
 app = typer.Typer()
 
 
 @app.command()
-def locate_existing_user(username: str, split_char: str = '\\n'):
+def locate_existing_user(username: str, split_char: str = "\\n"):
     """"""
     split_char = "\n" if split_char == "\\n" else split_char
     usernames = username.split(split_char)
@@ -34,7 +34,7 @@ def locate_existing_user(username: str, split_char: str = '\\n'):
 
 
 @app.command()
-def drop_class_and_users(class_id: str, split_char: str = '\\n'):
+def drop_class_and_users(class_id: str, split_char: str = "\\n"):
     """"""
     class_id = "\n" if class_id == "\\n" else class_id
     class_ids = class_id.split(split_char)
@@ -83,7 +83,7 @@ def drop_class_and_users(class_id: str, split_char: str = '\\n'):
 
 
 @app.command()
-def verify_users(username: str, split_char: str = '\\n'):
+def verify_users(username: str, split_char: str = "\\n"):
     """"""
     split_char = "\n" if split_char == "\\n" else split_char
     usernames = username.split(split_char)
@@ -126,7 +126,7 @@ def verify_users(username: str, split_char: str = '\\n'):
 
 
 @app.command()
-def delete_user_nodes(username: str, split_char: str = '\\n'):
+def delete_user_nodes(username: str, split_char: str = "\\n"):
     """"""
     split_char = "\n" if split_char == "\\n" else split_char
     usernames = username.split(split_char)
@@ -165,7 +165,7 @@ def delete_user_nodes(username: str, split_char: str = '\\n'):
 
 
 @app.command()
-def user_class(username: str, split_char: str = '\\n'):
+def user_class(username: str, split_char: str = "\\n"):
     """"""
     split_char = "\n" if split_char == "\\n" else split_char
     usernames = username.split(split_char)
@@ -199,13 +199,18 @@ def create_class(teacher_username: str, class_name: str):
 
         query = f"insert ignore into lyceum_class (name, teacher_id) values ('{class_name.strip()}', {user_id});"
 
-        if input(f"Are you sure you want to create the class '{class_name}'? [y/N] ")[:1].lower() == "y":
+        if (
+            input(f"Are you sure you want to create the class '{class_name}'? [y/N] ")[
+                :1
+            ].lower()
+            == "y"
+        ):
             with engine.connect() as con:
                 rs = con.execute(query)
 
 
 @app.command()
-def add_students_to_class(class_id: str, username: str, split_char: str = '\\n'):
+def add_students_to_class(class_id: str, username: str, split_char: str = "\\n"):
     engine = get_engine()
     split_char = "\n" if split_char == "\\n" else split_char
     usernames = username.split(split_char)
@@ -226,7 +231,12 @@ def add_students_to_class(class_id: str, username: str, split_char: str = '\\n')
         df = pd.read_sql(query, con=get_engine())
         print(format_table(df))
 
-        if input(f"Are you sure you want to assign these users to the class? [y/N] ")[:1].lower() == "y":
+        if (
+            input(f"Are you sure you want to assign these users to the class? [y/N] ")[
+                :1
+            ].lower()
+            == "y"
+        ):
 
             user_ids = []
 

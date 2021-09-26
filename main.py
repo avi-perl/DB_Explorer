@@ -14,7 +14,7 @@ from settings import settings as conf
 app = typer.Typer()
 
 # Import user defined commands
-for item in glob.glob(f'{conf.user_defined_commands_dir_name}/*'):
+for item in glob.glob(f"{conf.user_defined_commands_dir_name}/*"):
     item = Path(item)
     if item.suffix == ".py":
         module_name = item.stem  # Name of file. Will be used as the command name.
@@ -30,10 +30,10 @@ for item in glob.glob(f'{conf.user_defined_commands_dir_name}/*'):
 
 @app.command()
 def select(
-        table: str,
-        columns: List[str] = typer.Option([]),
-        comma_columns: str = None,
-        where: str = "",
+    table: str,
+    columns: List[str] = typer.Option([]),
+    comma_columns: str = None,
+    where: str = "",
 ):
     """Select data from database"""
     col = comma_columns.split(",") if comma_columns else []
@@ -69,7 +69,9 @@ def table_with_column(column_name: str):
 
 
 @app.command()
-def table_size(database: str = typer.Option("", help="Name of the database you want to examine")):
+def table_size(
+    database: str = typer.Option("", help="Name of the database you want to examine")
+):
     """Returns the number of rows in each table, how much memory its using, and more"""
     query = """SELECT
                   CONCAT(table_schema, '.', table_name) table_name,
