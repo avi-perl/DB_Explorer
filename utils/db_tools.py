@@ -57,10 +57,13 @@ class QueryDataOperation:
             for index, row in self.data.iterrows():
                 current_row = index + 1
                 print(row)
-                response = input(
-                    f"\nRow {current_row}/{self.result_count} :: Enter for the next row "
-                )
-                print()
+                if current_row != self.result_count:
+                    response = input(
+                        f"\nRow {current_row}/{self.result_count} :: Enter for the next row "
+                    )
+                    print()
+
+            raise typer.Exit()
 
     def do_show_query(self, show: bool, minify: bool, die: bool = False):
         """Helper function to display the query"""
