@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Callable
 
 import pandas as pd
 import typer
@@ -11,7 +11,7 @@ from .formatting import format_table, TableFormatOptions
 from settings import settings as conf
 
 
-class DataOP:
+class QueryDataOperation:
     query: str
     __data: pd.DataFrame = pd.DataFrame()
     __result_count: int = None
@@ -116,7 +116,7 @@ class TyperParams:
         None,
         "--output",
         "-o",
-        help=f"Path to export to. Supported types: {DataOP.supported_export_types}",
+        help=f"Path to export to. Supported types: {QueryDataOperation.supported_export_types}",
     )
     data_format: typer.Option = typer.Option(
         conf.tabulate_tablefmt,

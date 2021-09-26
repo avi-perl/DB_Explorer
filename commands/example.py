@@ -7,7 +7,7 @@ from typing import Optional
 import pandas as pd
 
 from utils.formatting import format_table, TableFormatOptions
-from utils.db_tools import get_engine, DataOP
+from utils.db_tools import get_engine, QueryDataOperation
 from utils.db_tools import TyperParams as tp
 
 app = typer.Typer(hidden=True)
@@ -29,10 +29,7 @@ def tables(
 ):
     """Example showing how to use the operations class for common use cases"""
 
-    def get_query() -> str:
-        return f"""SELECT NOW() UNION ALL SELECT NOW()"""
-
-    op = DataOP(get_query())
+    op = QueryDataOperation("SELECT NOW() UNION ALL SELECT NOW()")
     op.do_show_query(show_query, minified_query_format, die=True)
     op.do_save_output(Path(output_file_path) if output_file_path else None, die=True)
     op.do_print_pages(print_pages)
