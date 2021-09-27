@@ -109,7 +109,12 @@ def table_with_column(
 
 @app.command()
 def table_size(
-    database: str = typer.Option("", help="Name of the database you want to examine")
+    database: str = typer.Option("", "--database", "-d", help="Name of the database you want to examine"),
+    show_query: bool = tp.show_query,
+    minified_query_format: bool = tp.minified_query_format,
+    print_pages: bool = tp.print_pages,
+    output_file_path: Optional[str] = tp.output,
+    formatting: TableFormatOptions = tp.data_format,
 ):
     """Returns the number of rows in each table, how much memory its using, and more"""
     query = """SELECT
@@ -127,8 +132,12 @@ def table_size(
     query = f" {query} WHERE table_schema = '{database}'" if database else query
     query = f" {query} ORDER BY data_length + index_length DESC"
 
-    df = pd.read_sql(query, con=get_engine())
-    print(format_table(df))
+    op = QueryDataOperation(query)
+    op.do_show_query(show_query, minified_query_format, die=True)
+    op.do_save_output(Path(output_file_path) if output_file_path else None, die=True)
+    op.do_print_pages(print_pages)
+
+    print(op.data_formatted(formatting))
 
 
 if __name__ == "__main__":
