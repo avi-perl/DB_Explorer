@@ -5,10 +5,15 @@ from typing import Optional, List, Callable
 import pandas as pd
 import typer
 from sql_formatter.core import format_sql
+from rich import print
+from rich.console import Console
+from rich.syntax import Syntax
 
 from .engine import get_engine
 from .formatting import format_table, TableFormatOptions
 from settings import settings as conf
+
+console = Console()
 
 
 class QueryDataOperation:
@@ -22,9 +27,10 @@ class QueryDataOperation:
         self.query = query
 
     @property
-    def query_pretty(self) -> str:
+    def query_pretty(self) -> Syntax:
         """The query, formatted"""
-        return format_sql(self.query)
+        syntax = Syntax(format_sql(self.query), "sql", theme="monokai")
+        return syntax
 
     @property
     def query_minified(self) -> str:
@@ -56,12 +62,12 @@ class QueryDataOperation:
         if do:
             for index, row in self.data.iterrows():
                 current_row = index + 1
-                print(row)
+                console.print(row)
                 if current_row != self.result_count:
                     response = input(
                         f"\nRow {current_row}/{self.result_count} :: Enter for the next row "
                     )
-                    print()
+                    console.print()
 
             raise typer.Exit()
 
@@ -69,9 +75,9 @@ class QueryDataOperation:
         """Helper function to display the query"""
         if show:
             if minify:
-                typer.echo(self.query_minified)
+                console.print(self.query_minified)
             else:
-                typer.echo(self.query_pretty)
+                console.print(self.query_pretty)
 
             if die:
                 raise typer.Exit()

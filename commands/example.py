@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
+from rich import print
 
 from utils.formatting import format_table, TableFormatOptions
 from utils.db_tools import get_engine, QueryDataOperation
@@ -34,4 +35,4 @@ def op_example(
     op.do_save_output(Path(output_file_path) if output_file_path else None, die=True)
     op.do_print_pages(print_pages)
 
-    typer.echo(op.data_formatted(formatting))
+    print(op.data_formatted(formatting))
